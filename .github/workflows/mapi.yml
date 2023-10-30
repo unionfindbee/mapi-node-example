@@ -1,0 +1,76 @@
+name: 'Mayhem for API'
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+  schedule:
+    - cron: '0 2 * * *' # run at 2 AM UTC
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Run unit tests
+      run: npx nyc --reporter=lcov --report-dir=./coverage/unit mocha test.js
+
+    - name: Upload unit test coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        files: coverage/unit/lcov.info
+        flags: unit-tests
+        fail_ci_if_error: true
+
+    - name: Run API
+      env:
+        FASTAPI_ENV: test
+      run: npx nyc node app.js &
+
+    - name: Run Mayhem for API to check for vulnerabilities
+      uses: ForAllSecure/mapi-action@v2
+      continue-on-error: true
+      with:
+        mayhem-url: https://app.mayhem.security
+        mayhem-token: ${{ secrets.MAYHEM_TOKEN }}
+        api-url: http://localhost:3000
+        api-spec: openapi.yaml
+        sarif-report: mapi.sarif
+        html-report: mapi.html
+        target: forallsecure-demo/mapi-node-example/node
+
+    - name: Shut down API
+      run: pgrep node | xargs kill || true; sleep 5
+
+    - name: Generate coverage
+      run: npx nyc report --reporter=lcov --report-dir=./coverage/mayhem
+
+    - name: Upload Mayhem coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        name: mayhem
+        files: coverage/mayhem/lcov.info
+        flags: vulnerability-tests
+        fail_ci_if_error: true
+
+    - name: Archive Mayhem for API report
+      uses: actions/upload-artifact@v3
+      with:
+        name: mapi-report
+        path: mapi.html
+
+    - name: Upload SARIF file
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: mapi.sarif

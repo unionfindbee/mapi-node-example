@@ -1,0 +1,24 @@
+{
+  "dependencies": {
+    "express.js": "^1.0.0",
+    "sqlite3": "^5.1.6"
+  },
+  "devDependencies": {
+    "chai": "^4.3.10",
+    "chai-http": "^4.4.0",
+    "mocha": "^10.2.0",
+    "nyc": "^15.1.0",
+    "supertest": "^6.3.3"
+  },
+  "scripts": {
+    "start": "node app.js",
+    "test": "mocha test.js",
+    "test:coverage": "nyc npm test"
+  },
+  "nyc": {
+    "reporter": [
+      "lcov",
+      "text"
+    ]
+  }
+}
