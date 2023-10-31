@@ -46,7 +46,9 @@ jobs:
 
     # Kill python if it's still running, ignoring any errors
     - name: Shut down API
-      run: pgrep node | xargs kill || true; sleep 5
+      run: |
+        echo "pgrep node $(pgrep node)"
+        pgrep node | xargs kill || true; sleep 5
 
     # Archive HTML report
     - name: Archive Mayhem for API report
