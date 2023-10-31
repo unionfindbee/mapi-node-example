@@ -26,7 +26,7 @@ jobs:
 
 
     - name: Run unit tests
-      run: npx nyc --reporter=lcov --report-dir=./coverage/unit mocha test-unit.js
+      run: npx nyc --reporter=lcov --report-dir=./coverage/unit mocha test.js
 
 
     - name: Upload unit test coverage to Codecov
