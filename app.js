@@ -24,7 +24,7 @@ app.get('/', (req, res) => {
   res.send('Hello, World!');
 });
 
-// Login endpoint (Unsafe and not recommended for production use)
+// Login endpoint (Unsafe)
 app.get('/login', (req, res) => {
     const { email, password } = req.query;
   
