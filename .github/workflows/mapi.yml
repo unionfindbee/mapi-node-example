@@ -26,15 +26,13 @@ jobs:
 
 
     - name: Run unit tests
-      run: |
-        npm test
-        npm run test:coverage
+      run: npx nyc --reporter=lcov --report-dir=./coverage/unit mocha test-unit.js
 
 
     - name: Upload unit test coverage to Codecov
       uses: codecov/codecov-action@v3
       with:
-        files: coverage.xml
+        files: coverage/unit/lcov.info
         flags: unit-tests
         fail_ci_if_error: true
 
@@ -64,13 +62,13 @@ jobs:
       run: pgrep node | xargs kill || true; sleep 5
 
     - name: Generate coverage
-      run: npx nyc report --reporter=lcov
+      run: npx nyc report --reporter=lcov --report-dir=./coverage/mayhem
 
     - name: Upload Mayhem coverage to Codecov
       uses: codecov/codecov-action@v3
       with:
         name: mayhem
-        files: coverage/lcov.info
+        files: coverage/mayhem/lcov.info
         flags: vulnerability-tests
         fail_ci_if_error: true
 
