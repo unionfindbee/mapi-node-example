@@ -51,7 +51,7 @@ jobs:
     - name: Generate coverage
       run: npx nyc report --reporter=lcov
 
-    -name: Upload Mayhem coverage to Codecov
+    - name: Upload Mayhem coverage to Codecov
       uses: actions/upload-artifact@v3
       with:
         name: mayhem
