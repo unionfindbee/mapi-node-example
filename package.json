@@ -2,5 +2,8 @@
   "dependencies": {
     "express.js": "^1.0.0",
     "sqlite3": "^5.1.6"
+  },
+  "devDependencies": {
+    "nyc": "^15.1.0"
   }
 }

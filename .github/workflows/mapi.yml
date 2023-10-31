@@ -29,7 +29,7 @@ jobs:
     - name: Run API
       env:
         FASTAPI_ENV: test
-      run: node app.js &
+      run: npx nyc node app.js &
 
     # Run Mayhem for API
     - name: Run Mayhem for API to check for vulnerabilities
@@ -46,9 +46,18 @@ jobs:
 
     # Kill python if it's still running, ignoring any errors
     - name: Shut down API
-      run: |
-        echo "pgrep node $(pgrep node)"
-        pgrep node | xargs kill || true; sleep 5
+      run: pgrep node | xargs kill || true; sleep 5
+
+    - name: Generate coverage
+      run: npx nyc report --reporter=lcov
+
+    -name: Upload Mayhem coverage to Codecov
+      uses: actions/upload-artifact@v3
+      with:
+        name: mayhem
+        files: coverage/lcov.info
+        flags: vulnerability-tests
+        fail_ci_if_error: true
 
     # Archive HTML report
     - name: Archive Mayhem for API report
