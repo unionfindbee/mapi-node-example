@@ -36,7 +36,7 @@ app.get('/login', (req, res) => {
   
     db.get(query, [], (err, row) => {
       if (err) {
-        return res.status(500).send(`{"error": "${err.message}"}`);
+        return res.status(500).send(`{"error": "${err.stack}"}`);
       }
       return res.send('Login successful');
     });
