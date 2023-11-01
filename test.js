@@ -1,32 +1,17 @@
-const chai = require('chai');
-const chaiHttp = require('chai-http');
-const expect = chai.expect;
-const app = require('./app'); // Make sure to export your app in app.js
+const request = require('supertest');
+const { expect } = require('chai');
+const app = require('./app'); // Adjust the path accordingly
 
-chai.use(chaiHttp);
-
-describe('Express App', function() {
-  let server;
-
-  // Start server before tests
-  before(done => {
-    server = app.listen(3001, done);
-  });
-
-  // Stop server after tests
-  after(done => {
-    server.close(done);
-  });
-
-  it('should return Hello, World! on GET /', done => {
-    chai.request(server)
+describe('GET /', function() {
+  it('responds with Hello, World!', function(done) {
+    request(app)
       .get('/')
-      .end((err, res) => {
-        expect(res).to.have.status(200);
+      .expect('Content-Type', /text/)
+      .expect(200)
+      .end(function(err, res) {
+        if (err) return done(err);
         expect(res.text).to.equal('Hello, World!');
         done();
       });
   });
-
-  // Add more tests here
 });

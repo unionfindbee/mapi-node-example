@@ -1,43 +1,54 @@
-const request = require('supertest');
-const { expect } = require('chai');
-const app = require('./app'); // Path to your app.js
+const express = require('express');
+const sqlite3 = require('sqlite3').verbose(); // Verbose for easier debugging
+const app = express();
+const port = 3000;
 
-describe('Express Application', function () {
-  describe('GET /', function () {
-    it('should return Hello, World!', function (done) {
-      request(app)
-        .get('/')
-        .end(function (err, res) {
-          expect(res.text).to.equal('Hello, World!');
-          expect(res.statusCode).to.equal(200);
-          done(err);
-        });
-    });
+// Create an in-memory database
+const db = new sqlite3.Database(':memory:', (err) => {
+    if (err) {
+      return console.error(err.message);
+    }
+    console.log('Connected to the in-memory SQLite database.');
   });
-
-  describe('GET /login', function () {
-    it('should require email and password', function (done) {
-      request(app)
-        .get('/login')
-        .end(function (err, res) {
-          expect(res.statusCode).to.equal(400);
-          done(err);
-        });
-    });
-
-    it('should respond with login successful on correct credentials', function (done) {
-      // Assuming there's a user with these credentials in the database
-      request(app)
-        .get('/login?email=test@example.com&password=password123')
-        .end(function (err, res) {
-          expect(res.text).to.equal('Login successful');
-          expect(res.statusCode).to.equal(200);
-          done(err);
-        });
-    });
-
-    // More tests can be added as needed
+  
+  // Create a table
+  db.run('CREATE TABLE users (email TEXT, password TEXT)', (err) => {
+    if (err) {
+      return console.error(err.message);
+    }
+    console.log('Table created.');
   });
+  
 
-  // Additional route tests can be added here
+app.get('/', (req, res) => {
+  res.send('Hello, World!');
 });
+
+// Login endpoint (Unsafe)
+app.get('/login', (req, res) => {
+    const { email, password } = req.query;
+  
+    if (!email || !password) {
+      return res.status(400).send('Email and password are required');
+    }
+  
+    const query = `SELECT * FROM users WHERE email = '${email}' and password = '${password}'`;
+  
+    db.get(query, [], (err, row) => {
+      if (err) {
+        return res.status(500).send(`{"error": "${err.message}"}`);
+      }
+      return res.send('Login successful');
+    });
+  }); 
+  
+
+app.listen(port, () => {
+  console.log(`Listening at http://localhost:${port}`);
+});
+
+module.exports = app; // Export app for testing
+
+
+
+
