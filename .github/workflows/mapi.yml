@@ -64,7 +64,7 @@ jobs:
         flags: vulnerability-tests
         fail_ci_if_error: true
 
-    - name: Archive Mayhem for API report
+    - name: Archive Mayhem for API report 
       uses: actions/upload-artifact@v3
       with:
         name: mapi-report
