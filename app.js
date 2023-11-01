@@ -23,24 +23,6 @@ const db = new sqlite3.Database(':memory:', (err) => {
 app.get('/', (req, res) => {
   res.send('Hello, World!');
 });
-
-// Login endpoint (Unsafe)
-app.get('/login', (req, res) => {
-    const { email, password } = req.query;
-  
-    if (!email || !password) {
-      return res.status(400).send('Email and password are required');
-    }
-  
-    const query = `SELECT * FROM users WHERE email = '${email}' and password = '${password}'`;
-  
-    db.get(query, [], (err, row) => {
-      if (err) {
-        return res.status(500).send(`{"error": "${err.message}"}`);
-      }
-      return res.send('Login successful');
-    });
-  }); 
   
   const server = app.listen(port, () => {
     console.log(`Listening at http://localhost:${port}`);
