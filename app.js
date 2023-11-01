@@ -42,12 +42,15 @@ app.get('/login', (req, res) => {
     });
   }); 
   
-
-app.listen(port, () => {
-  console.log(`Listening at http://localhost:${port}`);
-});
-
-module.exports = app; // Export app for testing
+  const server = app.listen(port, () => {
+    console.log(`Listening at http://localhost:${port}`);
+  });
+  
+  module.exports = {
+    app: app,       // Export app for testing
+    server: server, // Export server instance for testing
+    db: db          // Export SQLite db instance for testing
+  };
 
 
 

@@ -1,9 +1,16 @@
 const request = require('supertest');
 const { expect } = require('chai');
-const app = require('./app'); // Adjust the path accordingly
+const { app, server, db } = require('./app'); // Adjust the path and destructure accordingly
+
 
 describe('GET /', function() {
   it('responds with Hello, World!', function(done) {
+    after(function() {
+        // Close the server and SQLite database connection after all tests
+        server.close();
+        db.close();
+      });
+
     request(app)
       .get('/')
       .expect('Content-Type', /text/)
