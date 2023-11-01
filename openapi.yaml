@@ -21,36 +21,4 @@ paths:
                 type: string
                 example: Hello, World!
 
-  /login:
-    get:
-      summary: User login
-      description: "Allows user to log in (Note: this is an unsafe method and not recommended for production use)."
-      parameters:
-        - in: query
-          name: email
-          required: true
-          description: User's email
-          schema:
-            type: string
-            format: email
-        - in: query
-          name: password
-          required: true
-          description: User's password
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Login successful
-          content:
-            text/html:
-              schema:
-                type: string
-                example: "<p>Login successful</p>"
-        '400':
-          description: Bad request, parameters missing or invalid
-          content:
-            text/html:
-              schema:
-                type: string
-                example: "<p>Bad request</p>"
+  
