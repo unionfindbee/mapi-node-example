@@ -1,6 +1,6 @@
 const request = require('supertest');
 const { expect } = require('chai');
-const { app, server, db } = require('./app'); // Adjust the path and destructure accordingly
+const { app, server, db } = require('./app'); 
 
 
 describe('GET /', function() {
