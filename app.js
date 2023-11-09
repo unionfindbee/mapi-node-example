@@ -1,5 +1,7 @@
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose(); // Verbose for easier debugging
+const fs = require('fs');
+const path = require('path');
 const app = express();
 const port = 3000;
 
@@ -40,6 +42,28 @@ app.get('/login', (req, res) => {
   });
 }); 
   
+
+// Vulnerable attachment endpoint
+app.get('/attachment/:name', (req, res) => {
+  // This line directly takes the user input and appends it to the directory path
+  const attachmentName = req.params.name;
+  const attachmentPath = path.join(__dirname, 'attachments', attachmentName);
+
+  // Check if file exists
+  if (!fs.existsSync(attachmentPath)) {
+    return res.status(404).send('Attachment not found');
+  }
+
+  // Read the file and send it in the response
+  fs.readFile(attachmentPath, (err, data) => {
+    if (err) {
+      return res.status(500).send('Error reading file');
+    }
+    res.setHeader('Content-Type', 'text/plain');
+    res.send(data);
+  });
+});
+
 const server = app.listen(port, () => {
   console.log(`Listening at http://localhost:${port}`);
 });

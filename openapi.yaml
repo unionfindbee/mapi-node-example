@@ -54,3 +54,37 @@ paths:
               schema:
                 type: string
                 example: "<p>Bad request</p>"
+
+  /attachment/{name}:
+    get:
+      summary: Retrieve attachment
+      description: "Endpoint to retrieve an attachment by name. Warning: This endpoint is vulnerable to path traversal attacks and is only for demo purposes."
+      parameters:
+        - in: path
+          name: name
+          required: true
+          description: The name of the attachment to retrieve, such as "test.txt"
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Attachment retrieved successfully
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Contents of the file..."
+        '400':
+          description: Bad request, parameters missing or invalid
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "<p>Bad request</p>"
+        '404':
+          description: Attachment not found
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "<p>Attachment not found</p>"
