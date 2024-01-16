@@ -49,7 +49,7 @@ jobs:
         sarif-report: mapi.sarif
         html-report: mapi.html
         target: forallsecure-demo/mapi-node-example/node
-        duration: 6002
+        duration: 61
 
     - name: Shut down API
       run: pgrep node | xargs kill || true; sleep 5
