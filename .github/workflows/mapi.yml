@@ -49,6 +49,7 @@ jobs:
         sarif-report: mapi.sarif
         html-report: mapi.html
         target: forallsecure-demo/mapi-node-example/node
+        duration: 600
 
     - name: Shut down API
       run: pgrep node | xargs kill || true; sleep 5
@@ -64,7 +65,7 @@ jobs:
         flags: vulnerability-tests
         fail_ci_if_error: true
 
-    - name: Archive Mayhem for API report
+    - name: Archive Mayhem for API report 
       uses: actions/upload-artifact@v3
       with:
         name: mapi-report
